@@ -29,7 +29,7 @@ public class DataLineReader implements IDataReader {
                 if(maxMemoryBytes == 0 || memoryBytes <= maxMemoryBytes) {
                     String line = _br.readLine();
                     if(line != null) {
-                        if(!line.isBlank()) {
+                        if(!line.equals("")) {
                             data.add(line);
                             memoryBytes += line.length() * 2;
                         }
@@ -52,7 +52,7 @@ public class DataLineReader implements IDataReader {
         while(true) {
             String line = _br.readLine();
             if (line != null) {
-                if (!line.isBlank()) {
+                if (!line.equals("")) {
                     record = line;
                     _lastMemoryBytes = record.length() * 2;
                     break;
