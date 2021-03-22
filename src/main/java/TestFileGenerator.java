@@ -1,7 +1,8 @@
-
 import extsort.dataaccess.out.DataLineWriter;
+
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Random;
 
 public class TestFileGenerator {
 
-    private static final List<String> _dict = Arrays.asList("Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+    private static final List<String> dictionary = Arrays.asList("Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
             "Bahamas, the", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
             "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "China", "Colombia", "Comoros", "Congo, Democratic Republic of the", "Congo, Republic of the", "Costa Rica", "Côte d’Ivoire", "Croatia", "Cuba", "Cyprus", "Czech Republic",
             "Denmark", "Djibouti", "Dominica", "Dominican Republic",
@@ -36,7 +37,7 @@ public class TestFileGenerator {
             "Zambia", "Zimbabwe");
 
     public static void main(String[] args) throws IOException {
-        if(args.length == 0 ||
+        if (args.length == 0 ||
                 (args.length == 1 &&
                         (args[0].toLowerCase().equals("help")
                                 || args[0].toLowerCase().equals("--help")
@@ -46,7 +47,7 @@ public class TestFileGenerator {
             System.exit(0);
         }
 
-        if(args.length != 4) {
+        if (args.length != 4) {
             System.err.println("Error: 4 arguments expected.");
             printUsage(System.err);
             System.exit(1);
@@ -57,7 +58,7 @@ public class TestFileGenerator {
         long maxLength = Long.parseLong(args[2]);
         String outFileName = args[3];
 
-        if(minRecordLength < 0 || maxRecordLength < 0 || minRecordLength >= maxRecordLength || maxLength < maxRecordLength) {
+        if (minRecordLength < 0 || maxRecordLength < 0 || minRecordLength >= maxRecordLength || maxLength < maxRecordLength) {
             System.err.println("Error: Invalid numerical parameters.");
             printUsage(System.err);
             System.exit(1);
@@ -78,14 +79,14 @@ public class TestFileGenerator {
     }
 
     private static void CreateLinewiseFile(String filename, int minRecordLength, int maxRecordLength, long maxLength) throws IOException {
-        DataLineWriter writer = new DataLineWriter(filename);
+        PrintWriter printWriter = new PrintWriter(filename);
+        DataLineWriter writer = new DataLineWriter(printWriter);
 
         int separatorLength = System.lineSeparator().getBytes().length;
         long bytes = 0;
 
-        boolean firstRecord = true;
         long numRecords = 0;
-        while(bytes < maxLength) {
+        while (bytes < maxLength) {
             String record = getRecord(minRecordLength, maxRecordLength);
             writer.writeRecord(record);
             bytes += (record.getBytes().length + separatorLength);
@@ -100,27 +101,27 @@ public class TestFileGenerator {
 
     private static String getRecord(int minLength, int maxLength) {
         HashSet<String> elems = new HashSet<>();
-        int dictSize = _dict.size();
+        int dictSize = dictionary.size();
         Random rand = new Random();
         int recordBytes = 0;
         int approxRecordLength = rand.nextInt(maxLength - minLength) + minLength;
-        StringBuilder sb  = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         String elemSeparator = "; ";
         int separatorBytes = elemSeparator.getBytes().length;
 
-        while(recordBytes < approxRecordLength) {
+        while (recordBytes < approxRecordLength) {
             int index = rand.nextInt(dictSize);
-            String elem = _dict.get(index);
-            if(elems.add(elem)) {
-                if(recordBytes > 0)
+            String elem = dictionary.get(index);
+            if (elems.add(elem)) {
+                if (recordBytes > 0)
                     recordBytes += separatorBytes;
                 recordBytes += elem.getBytes().length;
             }
         }
 
         boolean firstElem = true;
-        for(String elem: elems) {
-            if(firstElem)
+        for (String elem : elems) {
+            if (firstElem)
                 firstElem = false;
             else
                 sb.append(elemSeparator);

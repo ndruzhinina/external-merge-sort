@@ -1,19 +1,19 @@
 package extsort.business;
 
 public class MergeItem {
-    private String _value;
-    private int _chunkNumber;
+    private String value;
+    private int chunkNumber;
 
     MergeItem(String value, int chunkNumber) {
-        _value = value;
-        _chunkNumber = chunkNumber;
+        this.value = value;
+        this.chunkNumber = chunkNumber;
     }
 
     public String getValue() {
-        return _value;
+        return value;
     }
 
     public int getChunkNumber() {
-        return _chunkNumber;
+        return chunkNumber;
     }
 }

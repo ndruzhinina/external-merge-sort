@@ -2,18 +2,19 @@ package extsort.dataaccess.out;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.List;
 
 public class DataLineWriter implements IDataWriter {
 
-    private PrintWriter _pw;
+    private Writer writer;
 
-    public DataLineWriter(String fileName) throws IOException {
-        _pw = new PrintWriter(fileName);
+    public DataLineWriter(Writer writer) throws IOException {
+        this.writer = writer;
     }
 
     @Override
-    public void writeRecords(List<String> data) throws  IOException {
+    public void writeRecords(List<String> data) throws IOException {
         for(String record: data) {
             writeRecord(record);
         }
@@ -21,11 +22,12 @@ public class DataLineWriter implements IDataWriter {
 
     @Override
     public void writeRecord(String record) throws IOException {
-        _pw.println(record);
+        writer.write(record);
+        writer.write(System.lineSeparator());
     }
 
     @Override
     public void close() throws  IOException {
-        _pw.close();
+        writer.close();
     }
 }

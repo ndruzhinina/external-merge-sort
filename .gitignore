@@ -21,7 +21,7 @@ localhost.json
 heroku.json
 
 # Maven (from: https://github.com/github/gitignore/blob/master/Maven.gitignore)
-
+.idea/
 target/
 pom.xml.tag
 pom.xml.releaseBackup

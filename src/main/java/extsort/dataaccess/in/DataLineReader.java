@@ -5,18 +5,14 @@ import java.util.*;
 
 public class DataLineReader implements IDataReader {
 
-    private long _lastMemoryBytes;
-    private boolean _eof;
+    private long lastMemoryBytes;
+    private boolean endOfFile;
 
-    private FileInputStream _fis;
-    private InputStreamReader _isr;
-    private BufferedReader _br;
+    private BufferedReader bufferedReader;
 
-    public DataLineReader(String fileName) throws IOException {
-        _fis = new FileInputStream(fileName);
-        _isr = new InputStreamReader(_fis);
-        _br = new BufferedReader(_isr);
-        _eof = false;
+    public DataLineReader(Reader reader) throws IOException {
+        bufferedReader = new BufferedReader(reader);
+        endOfFile = false;
     }
 
     @Override
@@ -24,24 +20,24 @@ public class DataLineReader implements IDataReader {
         List<String> data = new ArrayList<String>();
 
         long memoryBytes = 0;
-        if(_br.ready()) {
+        if(bufferedReader.ready()) {
             while (true) {
                 if(maxMemoryBytes == 0 || memoryBytes <= maxMemoryBytes) {
-                    String line = _br.readLine();
+                    String line = bufferedReader.readLine();
                     if(line != null) {
                         if(!line.equals("")) {
                             data.add(line);
                             memoryBytes += line.length() * 2;
                         }
                     } else {
-                        _eof = true;
+                        endOfFile = true;
                         break;
                     }
                 } else break;
             }
         }
 
-        _lastMemoryBytes = memoryBytes;
+        lastMemoryBytes = memoryBytes;
         return data;
     }
 
@@ -50,15 +46,15 @@ public class DataLineReader implements IDataReader {
         long memoryBytes = 0;
         String record = null;
         while(true) {
-            String line = _br.readLine();
+            String line = bufferedReader.readLine();
             if (line != null) {
                 if (!line.equals("")) {
                     record = line;
-                    _lastMemoryBytes = record.length() * 2;
+                    lastMemoryBytes = record.length() * 2;
                     break;
                 }
             } else {
-                _eof = true;
+                endOfFile = true;
                 break;
             }
         }
@@ -68,16 +64,16 @@ public class DataLineReader implements IDataReader {
 
     @Override
     public void close()  throws IOException{
-        _br.close();
+        bufferedReader.close();
     }
 
     @Override
     public long getLastMemoryBytes() {
-        return _lastMemoryBytes;
+        return lastMemoryBytes;
     }
 
     @Override
     public boolean isEOF() {
-        return _eof;
+        return endOfFile;
     }
 }

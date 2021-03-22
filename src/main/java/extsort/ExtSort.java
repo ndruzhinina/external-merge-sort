@@ -3,14 +3,15 @@ package extsort;
 import java.io.*;
 
 import extsort.business.ExternalMergeSorter;
+import extsort.dataaccess.FileManager;
 import extsort.dataaccess.in.DataReaderFactory;
 import extsort.dataaccess.out.DataWriterFactory;
 
-class ExtSort {
-    public static void main(String[] args) throws IOException {
+public class ExtSort {
+    public static void main(String[] args) {
 
-        if(args.length != 3) {
-            System.err.println("Error: 3 arguments expected.");
+        if (args.length != 3) {
+            System.out.println("Error: 3 arguments expected.");
             System.err.println("Usage: ExtMergeSort <inputFile> <outputFile> <chunkSize>");
             System.err.println("   <inputFile>: input file name.");
             System.err.println("   <outputFile>: name of the file to write sorted data to.");
@@ -28,7 +29,7 @@ class ExtSort {
             System.exit(1);
         }
 
-        if(chunkSize < 10000) {
+        if (chunkSize < 10000) {
             System.err.println("Invalid chunk size. The size is expected to be greater than 9999");
             System.exit(1);
         }
@@ -38,7 +39,8 @@ class ExtSort {
                 outFileName,
                 chunkSize,
                 new DataReaderFactory(),
-                new DataWriterFactory());
+                new DataWriterFactory(),
+                new FileManager());
 
         try {
             sorter.run();
